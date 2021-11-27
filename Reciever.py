@@ -43,23 +43,30 @@ def recieveData(sock):
             break
     return parseJsonStringToDict(alldata)
 
+def getDataFromServer(sock):
+    request = '\n'
+    sock.sendall(request)
+    print("Request send")
+    return recieveData(sock)
+
+
 def main():
     try:
-        
-        # Send 
-        request = '\n'
-        sock.sendall(request)
-        print("Request send")
-        # Look for the response    
-        result = recieveData(sock)
-        print(result)
-
-        
+        counter = 0
+        timeCurrent = time.time()
+        while(time.time() <= (timeCurrent +1)):
+            getDataFromServer(sock)
+            counter = counter + 1
+        print(str(counter) + " Abfragen pro Sekunde")
 
 
     finally:
         print >>sys.stderr, 'closing socket'
         sock.close()
+
+
+
+
 
 if __name__ == "__main__":
     main()
