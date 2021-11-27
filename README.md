@@ -43,3 +43,5 @@ The responding JSON has all Coordinates of the 3D Modell.
     Right now this happens with a Storage Usage of 100 Bytes. :/
 
 - **Write a Main Function for the Python Script**
+
+processing-java --platform=windows --sketch="C:\Users\Test\Desktop\testProce" --output="C:\Users\Test\Desktop\testProce\output"  --export test
