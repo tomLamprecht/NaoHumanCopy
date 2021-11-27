@@ -52,12 +52,13 @@ def getDataFromServer(sock):
 
 def main():
     try:
-        counter = 0
-        timeCurrent = time.time()
-        while(time.time() <= (timeCurrent +1)):
-            getDataFromServer(sock)
-            counter = counter + 1
-        print(str(counter) + " Abfragen pro Sekunde")
+        print(getDataFromServer(sock))
+        #counter = 0
+        #timeCurrent = time.time()
+       # while(time.time() <= (timeCurrent +1)):
+        #getDataFromServer(sock)
+           # counter = counter + 1
+        #print(str(counter) + " Abfragen pro Sekunde")
 
 
     finally:

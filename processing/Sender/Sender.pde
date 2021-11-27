@@ -8,23 +8,27 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.InputStreamReader;
 
-
-
-ServerSocket ss;
+JSONObject jsonObject = new JSONObject();
 final int PORT = 5001;
 
 void setup() {
-    try{
-       ss = new ServerSocket(PORT);
-    while(true){
-       println("Waiting for Connection...");
-       Socket socket = ss.accept();
-       println("Connection with: " + socket);
-       ConnectionThread ct = new ConnectionThread(socket);
-       ct.start();
-    }
-      
-} catch(IOException e) {
-        e.printStackTrace();
+startServer();
+size(600,700);
 }
+
+void draw(){
+
+
+}
+
+void mousePressed(){
+  jsonObject = new JSONObject();
+  jsonObject.setString("mouseLocation" + jsonObject.size(), mouseX + " " + mouseY);
+}
+
+
+
+void startServer(){
+  ServerThread st = new ServerThread();
+  st.start();
 }

@@ -28,12 +28,9 @@ public class ConnectionThread extends Thread{
          br.readLine();
          
          //Create dummy Json
-        JSONObject json = new JSONObject();
-        for(int i = 0 ; i < 10; i++)
-        json.setString("key" + i, "value" + i);
-        
+
         //send JSON
-        sendData(json,bw, br);
+        sendData(jsonObject,bw, br);
        }
     }
     catch(IOException e)
