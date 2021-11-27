@@ -1,14 +1,9 @@
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.InputStreamReader;
 
+
+//This is the JsonObject that gets send if the client sends a request
 JSONObject jsonObject = new JSONObject();
+
+//PORT to Connect to Server
 final int PORT = 5001;
 
 void setup() {
