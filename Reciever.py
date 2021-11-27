@@ -20,10 +20,13 @@ def getLengthOfCommingData(sock):
     alldata = 0
     while True:
         data = sock.recv(100)
+
         if(len(data) != 0):
             alldata = int(data)
-        if(alldata > 0):
+
+        if(alldata != 0):
             break
+    sock.sendall("\n")
     return alldata
 
 def recieveData(sock):
@@ -40,19 +43,23 @@ def recieveData(sock):
             break
     return parseJsonStringToDict(alldata)
 
+def main():
+    try:
+        
+        # Send 
+        request = '\n'
+        sock.sendall(request)
+        print("Request send")
+        # Look for the response    
+        result = recieveData(sock)
+        print(result)
 
-try:
-    
-    # Send 
-    request = '\n'
-    sock.sendall(request)
-    # Look for the response    
-    result = recieveData(sock)
-    print(result)
-
-    
+        
 
 
-finally:
-    print >>sys.stderr, 'closing socket'
-    sock.close()
+    finally:
+        print >>sys.stderr, 'closing socket'
+        sock.close()
+
+if __name__ == "__main__":
+    main()

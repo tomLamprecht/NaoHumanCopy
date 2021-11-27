@@ -9,6 +9,7 @@ import java.io.OutputStreamWriter;
 import java.io.InputStreamReader;
 
 
+
 ServerSocket ss;
 final int PORT = 5001;
 
@@ -28,27 +29,25 @@ void setup() {
         JSONObject json = new JSONObject();
         for(int i = 0 ; i < 10; i++)
         json.setString("key" + i, "value" + i);
-        sendData(json,bw);
+
+        sendData(json,bw, br);
        os.close();
        is.close();
     }
-     // println("Server Closed");
-     // exit();
       
 } catch(IOException e) {
         e.printStackTrace();
 }
 }
 
-void draw() {
-    background(255,0,0);
-}
-
-void sendData(JSONObject jsonObject, BufferedWriter bw) throws IOException{
+void sendData(JSONObject jsonObject, BufferedWriter bw, BufferedReader br) throws IOException{
   String parsedJson = jsonObject.toString(); 
   int messageLength = parsedJson.length();
   bw.write(String.valueOf(messageLength));
    bw.flush();
+   println("Length of Message Send, waiting for confirmation...");
+   br.readLine();
+   println("Length got confirmed, sending JSON...");
   bw.write(parsedJson); 
   bw.flush();
   println("Data send");
