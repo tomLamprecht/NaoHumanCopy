@@ -11,7 +11,13 @@ The Protokol for the communication is the following:
         The Client sends a request to the Server
 
 - **Answer**\
-        The Server sends 2 messages back. The first gonna be the length of the upcomming JSON and the second is the JSON. (It is assumed that the size of JSON can be saved in a integer (32 Bit))
+        The Server sends the length of the upcomming JSON. (It is assumed that the size of JSON can be saved in a integer (32 Bit))
+
+- **Confirmation**\
+        The Client has to read the first Message and send an confirmation back to the Server that he is ready for the JSON
+
+- **Final Answer**\
+        The Server sends the JSON and is ready for the next Connection 
 
 <br>
 This can be repeated as often as necessary.\
