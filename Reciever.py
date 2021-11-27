@@ -1,6 +1,7 @@
 import socket
 import sys
-import struct
+import json
+import time
 
 HOST = "localhost"
 PORT = 5001
@@ -8,6 +9,12 @@ PORT = 5001
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect((HOST, PORT))
 
+def parseJsonStringToDict(jsonString):
+    try:
+        return json.loads(jsonString)
+    except Exception as e:
+        raise Exception("The send Data wasnt in JSON Format.")
+        
 
 def getLengthOfCommingData(sock):
     alldata = 0
@@ -31,21 +38,17 @@ def recieveData(sock):
         #print >>sys.stderr, 'received "%s"' % data
         if(amount_received >= lengthOfData):
             break
-    return alldata
+    return parseJsonStringToDict(alldata)
 
 
 try:
     
-    # Send data
-    message = 'This is the message.  It will be repeated.\n'
-    print >>sys.stderr, 'sending: %s' % message
-    sock.sendall(message)
-    # Look for the response
-    amount_received = 0
-    amount_expected = len(message)
-    
-    print(recieveData(sock))
-        
+    # Send 
+    request = '\n'
+    sock.sendall(request)
+    # Look for the response    
+    result = recieveData(sock)
+    print(result)
 
     
 
