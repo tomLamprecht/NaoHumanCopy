@@ -39,13 +39,24 @@ def getLengthOfCommingData(sock):
     sock.sendall("\n")
     return alldata
 
+#Get the Amount of Bytes that can be read without reading to much
+def MaxReadingBytes(lengthOfMessage):
+    #Max Value that can be read
+    value = 512
+    print(lengthOfMessage % value)
+    while((lengthOfMessage%value) != 0):
+        value = value / 2
+    return value
+
 def recieveData(sock):
     lengthOfData = getLengthOfCommingData(sock)
     #print("CLIENT: Length of Comming Message is: " + str(lengthOfData))
     amount_received = 0
     alldata = ""
+    amountOfBytesReading = MaxReadingBytes(lengthOfData)
+   # print("Reading bytes" + str(amountOfBytesReading))
     while True:
-        data = sock.recv(16)
+        data = sock.recv(amountOfBytesReading)
         alldata += data
         amount_received += len(data)
         #print >>sys.stderr, 'received "%s"' % data
