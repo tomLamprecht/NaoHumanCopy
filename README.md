@@ -44,4 +44,6 @@ The responding JSON has all Coordinates of the 3D Modell.
 
 - **Write a Main Function for the Python Script**
 
+- **Update AmountOfBytesRead function**
+
 processing-java --platform=windows --sketch="C:\Users\Test\Desktop\testProce" --output="C:\Users\Test\Desktop\testProce\output"  --export test
