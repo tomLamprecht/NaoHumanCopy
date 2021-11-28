@@ -1,4 +1,4 @@
-
+import kinect4WinSDK.Kinect;
 
 //This is the JsonObject that gets send if the client sends a request
 JSONObject jsonObject = new JSONObject();
@@ -6,24 +6,28 @@ JSONObject jsonObject = new JSONObject();
 //PORT to Connect to Server
 final int PORT = 5001;
 
+//The Handler for the Kinect Camera
+KinectHandler kinectHandler;
+
 void setup() {
-  for(int i= 0 ; i < 100; i++)
-  jsonObject.setString("Key" +i, "Value"+i);
+startKinect();
 startServer();
-size(600,700);
+//the Resolution of the Camera
+size(640,480);
+smooth();
 }
 
 void draw(){
-
-
+  background(0);
+kinectHandler.drawImages();
+jsonObject = kinectHandler.getJsonOfLatestBody();
 }
 
-void mousePressed(){
-  jsonObject = new JSONObject();
-  jsonObject.setString("mouseLocation" + jsonObject.size(), mouseX + " " + mouseY);
+void startKinect(){
+Kinect kinect =new Kinect(this);
+kinectHandler = new KinectHandler(kinect);
+
 }
-
-
 
 void startServer(){
   ServerThread st = new ServerThread();

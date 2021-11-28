@@ -17,12 +17,9 @@ def main():
     socket = Reciever.connectToServer()
     print("CLIENT: Connected to the Server")
   #  print(Reciever.getDataFromServer(socket))
-    counter = 0
-    timeCurrent = time.time()
-    while(time.time() <= (timeCurrent +1)):
-        Reciever.getDataFromServer(socket)
-        counter = counter + 1
-    print(str(counter) + " Abfragen pro Sekunde")
+    while(True):
+        time.sleep(2)
+        print(Reciever.getDataFromServer(socket))
 
 if __name__ == "__main__":
     main()
