@@ -24,7 +24,7 @@ public class ConnectionThread extends Thread{
        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
        while(true){
          //Wait until Request
-         println("Wait until Client sends a Request...");
+         //println("SERVER: Wait until Client sends a Request...");
          br.readLine();
          
          //Create dummy Json
@@ -35,7 +35,7 @@ public class ConnectionThread extends Thread{
     }
     catch(IOException e)
     {
-      println("Client probably ended the Connection");
+      println("SERVER: Client probably ended the Connection");
     }
     finally{
       try{
@@ -54,11 +54,11 @@ public class ConnectionThread extends Thread{
   int messageLength = parsedJson.length();
   bw.write(String.valueOf(messageLength));
    bw.flush();
-   println("Length of Message Send, waiting for confirmation...");
+  // println("SERVER: Length of Message Send, waiting for confirmation...");
    br.readLine();
-   println("Length got confirmed, sending JSON...");
+ //  println("SERVER: Length got confirmed, sending JSON...");
   bw.write(parsedJson); 
-  println("Data send");
+ // println("SERVER: Data send");
   bw.flush();
 }
   

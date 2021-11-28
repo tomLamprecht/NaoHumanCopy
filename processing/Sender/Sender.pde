@@ -7,6 +7,8 @@ JSONObject jsonObject = new JSONObject();
 final int PORT = 5001;
 
 void setup() {
+  for(int i= 0 ; i < 100; i++)
+  jsonObject.setString("Key" +i, "Value"+i);
 startServer();
 size(600,700);
 }

@@ -16,9 +16,9 @@ public void run(){
       try{
       ss = new ServerSocket(PORT);
     while(true){
-       println("Waiting for Connection...");
+       println("SERVER: Server started. Waiting for Connection...");
        Socket socket = ss.accept();
-       println("Connection with: " + socket);
+       println("SERVER: Connection with: " + socket);
        ConnectionThread ct = new ConnectionThread(socket);
        ct.start();
     }

@@ -6,14 +6,23 @@ import time
 HOST = "localhost"
 PORT = 5001
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((HOST, PORT))
+def connectToServer():
+    tries = 10
+    for i in range(0, tries):
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((HOST, PORT))
+            return sock
+        except Exception as e:
+            #wait one secound and try again
+            print("CLIENT: Couldnt Connect trying again... (" + str(tries - i) + " tries left)")
+            time.sleep(1)
 
 def parseJsonStringToDict(jsonString):
     try:
         return json.loads(jsonString)
     except Exception as e:
-        raise Exception("The send Data wasnt in JSON Format.")
+        raise Exception("CLIENT: The send Data wasnt in JSON Format.")
         
 
 def getLengthOfCommingData(sock):
@@ -31,7 +40,7 @@ def getLengthOfCommingData(sock):
 
 def recieveData(sock):
     lengthOfData = getLengthOfCommingData(sock)
-    print("Length of Comming Message is: " + str(lengthOfData))
+    #print("CLIENT: Length of Comming Message is: " + str(lengthOfData))
     amount_received = 0
     alldata = ""
     while True:
@@ -46,28 +55,6 @@ def recieveData(sock):
 def getDataFromServer(sock):
     request = '\n'
     sock.sendall(request)
-    print("Request send")
+    #print("CLIENT: Request send")
     return recieveData(sock)
 
-
-def main():
-    try:
-        print(getDataFromServer(sock))
-        #counter = 0
-        #timeCurrent = time.time()
-       # while(time.time() <= (timeCurrent +1)):
-        #getDataFromServer(sock)
-           # counter = counter + 1
-        #print(str(counter) + " Abfragen pro Sekunde")
-
-
-    finally:
-        print >>sys.stderr, 'closing socket'
-        sock.close()
-
-
-
-
-
-if __name__ == "__main__":
-    main()
