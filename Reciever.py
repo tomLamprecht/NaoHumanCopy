@@ -17,6 +17,7 @@ def connectToServer():
             #wait one secound and try again
             print("CLIENT: Couldnt Connect trying again... (" + str(tries - i) + " tries left)")
             time.sleep(1)
+    raise Exception("CLIENT: Couldnt Connect to the Server. Shutting down...")
 
 def parseJsonStringToDict(jsonString):
     try:

@@ -18,7 +18,7 @@ def main():
     print("CLIENT: Connected to the Server")
   #  print(Reciever.getDataFromServer(socket))
     while(True):
-        time.sleep(2)
+        time.sleep(1)
         print(Reciever.getDataFromServer(socket))
 
 if __name__ == "__main__":
