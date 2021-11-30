@@ -157,10 +157,7 @@ void drawBody(){
   }
   
   public boolean isBodyTracked(SkeletonData body){
-    if(body.trackingState == Kinect.NUI_SKELETON_TRACKED){
-      return true;
-    }
-    return false;
+    return (body.trackingState == Kinect.NUI_SKELETON_TRACKED)
   }
   
   private void printCountDown(int duration){
