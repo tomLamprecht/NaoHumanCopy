@@ -175,12 +175,13 @@ void drawBody(){
     
       //Get latest Registered Body
       SkeletonData body = bodies.get(bodies.size()-1);
-      
+            
+      if(body.trackingState == Kinect.NUI_SKELETON_POSITION_NOT_TRACKED && !calibrated)
+        return null;
+
       Map<String, Float[]> valueMap = new HashMap<String, Float[]>();
-      
       Map<String, Integer[]> indexMap = createIndexMap();
       for(String keyElement : indexMap.keySet()){
-          if(body.trackingState == Kinect.NUI_SKELETON_POSITION_TRACKED && calibrated){
             Integer[] indexes = indexMap.get(keyElement);
             float x = body.skeletonPositions[indexes[0]].x - body.skeletonPositions[indexes[1]].x;
             float y = -(body.skeletonPositions[indexes[0]].y - body.skeletonPositions[indexes[1]].y);
@@ -189,9 +190,6 @@ void drawBody(){
             y  = mapDistToPercentage(y, leftArmMaxDist_y);
             z = mapDistToPercentage(z, leftArmMaxDist_z);
             valueMap.put(keyElement, new Float[]{x,y,z});
-          }else{
-            return null;
-          }
       }
       return valueMap;
     }
