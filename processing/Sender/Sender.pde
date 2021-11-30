@@ -21,6 +21,7 @@ void draw(){
   background(0);
 kinectHandler.drawImages();
 jsonObject = kinectHandler.getJsonOfLatestBody();
+//kinectHandler.testMethod();
 }
 
 void startKinect(){
@@ -32,4 +33,8 @@ kinectHandler = new KinectHandler(kinect);
 void startServer(){
   ServerThread st = new ServerThread();
   st.start();
+}
+
+public void keyPressed(){
+kinectHandler.calibrate();
 }

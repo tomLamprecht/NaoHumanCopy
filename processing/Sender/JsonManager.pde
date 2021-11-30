@@ -3,18 +3,22 @@ import kinect4WinSDK.SkeletonData;
 public static class JsonManager{
 
   
-    public static JSONObject parseSkeletonToJson(Map<String, Integer> indexMap, SkeletonData currentBody){
-            PVector[] positions = currentBody.skeletonPositions;
+    public static JSONObject parseSkeletonToJson(Map<String, Float[]> valueMap){
             JSONObject json = new JSONObject();
-            //Get an Map of all Coordinates that have to be tracked
-            Set<String> keys = indexMap.keySet();
+            
+            //if the valueMap is invalid return the emptyJson
+            if(valueMap == null)
+                return json;
+            
+            //get the Names of all calculated Coordinates
+            Set<String> keys = valueMap.keySet();
            //Build the JSON
            for(String element : keys){
              JSONObject temp = new JSONObject();
-             PVector pos = positions[indexMap.get(element)];
-             temp.setDouble("x",pos.x);
-             temp.setDouble("y", pos.y);
-             temp.setDouble("z", pos.z);
+             Float[] pos = valueMap.get(element);
+             temp.setDouble("x",pos[0]);
+             temp.setDouble("y", pos[1]);
+             temp.setDouble("z", pos[2]);
              json.setJSONObject(element,temp);
            }
           return json;

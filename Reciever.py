@@ -43,7 +43,6 @@ def getLengthOfCommingData(sock):
 def MaxReadingBytes(lengthOfMessage):
     #Max Value that can be read
     value = 512
-    print(lengthOfMessage % value)
     while((lengthOfMessage%value) != 0):
         value = value / 2
     return value

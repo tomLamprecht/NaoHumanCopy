@@ -5,40 +5,47 @@ class KinectHandler{
 
   Kinect kinect;
   ArrayList<SkeletonData> bodies;
+  boolean calibrated, calibrationInProgress;
+  float leftArmMaxDist_x, leftArmMaxDist_y, leftArmMaxDist_z, rightArmMaxDist_x, rightArmMaxDist_y, rightArmMaxDist_z;
+  
+  class CalibrationThread extends Thread{
+    @Override
+    public void run(){
+        calibrateMethod();
+    }
+  }
+  
   
   public KinectHandler(Kinect kinect) {
   this.kinect =  kinect;
   bodies = new ArrayList<SkeletonData>();
-  }
+  calibrated = false;  
+  
+}
   
   public JSONObject getJsonOfLatestBody(){
-    //If no Body is registered, return empty JSON
-    if(bodies.size() == 0)
-      return new JSONObject();
-      
-    //Get Latest Body
-    SkeletonData currentBody = bodies.get(bodies.size()-1);
-    
-    // If current body isnt tracked return empty JSON
-   if( currentBody.trackingState == Kinect.NUI_SKELETON_POSITION_NOT_TRACKED){
-     return new JSONObject();
-   }
-
-    //Get an Map of all Coordinates that have to be tracked
-   Map<String, Integer> indexMap = createIndexMap();
+    //Calculate the coordinates
+    Map<String, Float[]> valueMap = calculateCoordinates();
    
-   // build and return the JSONObject
-   return JsonManager.parseSkeletonToJson(indexMap, currentBody);
-  }
-  
-  public Map<String, Integer> createIndexMap(){
-    Map<String, Integer> indexMap = new HashMap<String, Integer>();
-   indexMap.put("Left_Shoulder", Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT);
-   indexMap.put("Left_Elbow", Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT);
-   indexMap.put("Left_Wrist", Kinect.NUI_SKELETON_POSITION_WRIST_LEFT);
-   indexMap.put("Right_Shoulder", Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT);
-   indexMap.put("Right_Elbow", Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT);
-   indexMap.put("Right_Wrist", Kinect.NUI_SKELETON_POSITION_WRIST_RIGHT);
+   // parse the Coordinates to JSON and return it
+   return JsonManager.parseSkeletonToJson(valueMap);  
+}
+
+
+  /**
+  * Gives back an Map with a description of a joint as the key, 
+  * and as value an array of Integer with the first element beeing the index of the calculating joint
+  * and the second element beeing the index of the joint thats the reference point to the calculating joint.
+  *
+  * To calculate a new joint just add a new entry to the indexMap. 
+  * (Warning: Be careful what joint you give as reference point, not all of them have been calibrated to work as intended)
+  */
+  public Map<String, Integer[]> createIndexMap(){
+    Map<String, Integer[]> indexMap = new HashMap<String, Integer[]>();
+   indexMap.put("Left_Hand", new Integer[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT});
+   indexMap.put("Left_Hand", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT});
+   indexMap.put("Right_Hand",new Integer[]{ Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT});
+   indexMap.put("Right_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT});
   
    return indexMap;
   }
@@ -90,6 +97,139 @@ void drawBody(){
     }
     text( _s.skeletonPositions[_j2].z, width/2, height/2);
   }
+  
+  
+  public void calibrate(){
+    if(!calibrationInProgress){
+      new CalibrationThread().start();
+    }else{
+      println("Already Calibrating right now");
+    }
+  }
+  
+  private void calibrateMethod(){
+    calibrated = false;
+    calibrationInProgress = true;
+    
+   //Get latest Registered Body
+   if(bodies.size() < 1){
+     println("No Bodies tracked... couldnt calibrate");
+     calibrationInProgress = false;
+     return;
+   }
+   SkeletonData body = bodies.get(bodies.size()-1);
+  
+   //Calibrate X Values
+   if(!calibrationPreparation("Reach out both arms sideways", body)) return;
+   this.leftArmMaxDist_x =abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].x);
+   this.rightArmMaxDist_x = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].x  - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT].x);
+   println("X Values calibrated");
+   
+   //Calibrate Y Values
+   if(!calibrationPreparation("Put up both arms", body)) return;
+   this.leftArmMaxDist_y = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].y);
+   this.rightArmMaxDist_y = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].y  - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT].y);
+   println("Y Values calibrated");
+   
+   //Calibrate Z Values
+   if(!calibrationPreparation("Reach both arms infront of you", body)) return;
+   this.leftArmMaxDist_z = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].z - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].z);
+   this.rightArmMaxDist_z = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].z  - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT].z);
+   println("Z Values calibrated");
+   
+   calibrated = true;
+   calibrationInProgress = false;
+}
+
+  /**
+  *This Method does the preparation for each calibration step and returns false if the body is no longer tracked
+  */
+  private boolean calibrationPreparation(String output, SkeletonData body){
+     println(output);
+     printCountDown(5);
+     if(!isBodyTracked(body)){
+       print("Person couldnt be tracked anymore. Canceling Calibration");
+       calibrated = false;
+       calibrationInProgress = false;
+       return false;
+     }
+     return true;
+  }
+  
+  public boolean isBodyTracked(SkeletonData body){
+    if(body.trackingState == Kinect.NUI_SKELETON_TRACKED){
+      return true;
+    }
+    return false;
+  }
+  
+  private void printCountDown(int duration){
+       for(int i = 0; i < duration; i++){
+     try{
+       println(i);
+       Thread.sleep(1000);
+     }catch(InterruptedException e) {
+       e.printStackTrace();
+     }
+   }
+  }
+    public Map<String, Float[]> calculateCoordinates(){
+    if(bodies.size() < 1) return null;
+    
+      //Get latest Registered Body
+      SkeletonData body = bodies.get(bodies.size()-1);
+      
+      Map<String, Float[]> valueMap = new HashMap<String, Float[]>();
+      
+      Map<String, Integer[]> indexMap = createIndexMap();
+      for(String keyElement : indexMap.keySet()){
+          if(body.trackingState == Kinect.NUI_SKELETON_POSITION_TRACKED && calibrated){
+            Integer[] indexes = indexMap.get(keyElement);
+            float x = body.skeletonPositions[indexes[0]].x - body.skeletonPositions[indexes[1]].x;
+            float y = -(body.skeletonPositions[indexes[0]].y - body.skeletonPositions[indexes[1]].y);
+            float z = -(body.skeletonPositions[indexes[0]].z - body.skeletonPositions[indexes[1]].z);
+            x = mapDistToPercentage(x, leftArmMaxDist_x);
+            y  = mapDistToPercentage(y, leftArmMaxDist_y);
+            z = mapDistToPercentage(z, leftArmMaxDist_z);
+            valueMap.put(keyElement, new Float[]{x,y,z});
+          }else{
+            return null;
+          }
+      }
+      return valueMap;
+    }
+  
+  
+    public void testMethod(){      
+      
+
+     for(SkeletonData body : bodies){
+        if(body.trackingState == Kinect.NUI_SKELETON_POSITION_TRACKED && calibrated){
+          float x = body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].x;
+          float y = -(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].y);
+          float z = -(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].z - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].z);
+          x = mapDistToPercentage(x, leftArmMaxDist_x);
+          y  = mapDistToPercentage(y, leftArmMaxDist_y);
+          z = mapDistToPercentage(z, leftArmMaxDist_z);
+          
+         println("x: " + nf(x,0,2) + " y: " + nf(y,0,2) + " z: " + nf(z,0,2));
+        }
+     }
+  }
+  
+  public float mapDistToPercentage(float realDist, float maxDist){
+    return limitValue(map(realDist, -maxDist, maxDist, -1, 1),-1, 1);
+  }
+  
+  public float limitValue (float value, float min, float max){
+  if(value < min) return min;
+  else if(value > max) return max;
+  return value;
+  }
+  
+ 
+  
+  
 }
 
 void appearEvent(SkeletonData _s) 
