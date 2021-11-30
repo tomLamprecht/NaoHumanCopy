@@ -43,7 +43,7 @@ class KinectHandler{
   public Map<String, Integer[]> createIndexMap(){
     Map<String, Integer[]> indexMap = new HashMap<String, Integer[]>();
    indexMap.put("Left_Hand", new Integer[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT});
-   indexMap.put("Left_Hand", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT});
+   indexMap.put("Left_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT});
    indexMap.put("Right_Hand",new Integer[]{ Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT});
    indexMap.put("Right_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT});
   
@@ -157,7 +157,7 @@ void drawBody(){
   }
   
   public boolean isBodyTracked(SkeletonData body){
-    return (body.trackingState == Kinect.NUI_SKELETON_TRACKED)
+    return (body.trackingState == Kinect.NUI_SKELETON_TRACKED);
   }
   
   private void printCountDown(int duration){
@@ -176,7 +176,7 @@ void drawBody(){
       //Get latest Registered Body
       SkeletonData body = bodies.get(bodies.size()-1);
             
-      if(body.trackingState == Kinect.NUI_SKELETON_POSITION_NOT_TRACKED && !calibrated)
+      if(body.trackingState == Kinect.NUI_SKELETON_POSITION_NOT_TRACKED || !calibrated)
         return null;
 
       Map<String, Float[]> valueMap = new HashMap<String, Float[]>();
@@ -194,23 +194,6 @@ void drawBody(){
       return valueMap;
     }
   
-  
-    public void testMethod(){      
-      
-
-     for(SkeletonData body : bodies){
-        if(body.trackingState == Kinect.NUI_SKELETON_POSITION_TRACKED && calibrated){
-          float x = body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].x;
-          float y = -(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].y);
-          float z = -(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].z - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].z);
-          x = mapDistToPercentage(x, leftArmMaxDist_x);
-          y  = mapDistToPercentage(y, leftArmMaxDist_y);
-          z = mapDistToPercentage(z, leftArmMaxDist_z);
-          
-         println("x: " + nf(x,0,2) + " y: " + nf(y,0,2) + " z: " + nf(z,0,2));
-        }
-     }
-  }
   
   public float mapDistToPercentage(float realDist, float maxDist){
     return limitValue(map(realDist, -maxDist, maxDist, -1, 1),-1, 1);
