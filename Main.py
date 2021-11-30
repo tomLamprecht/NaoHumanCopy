@@ -29,7 +29,6 @@ def calculateJoints(x,y,z):
             angleShoulderPitch = y*90 + 2*(90 - y*90)
             pass
 
-    print(angleShoulderPitch)
     return [radians(angleShoulderPitch), radians(angleShoulderRoll)]
 
 
@@ -58,17 +57,25 @@ def main():
         data = Reciever.getDataFromServer(socket)
         if (data != json.loads("{}")):
             names = ["RShoulderPitch", "RShoulderRoll"]
-            x = data["Right_Hand"]["x"]
-            y = data["Right_Hand"]["y"]
-            z = data["Right_Hand"]["z"]
+            x = data["Right_Elbow"]["x"]
+            y = data["Right_Elbow"]["y"]
+            z = data["Right_Elbow"]["z"]
             angles = calculateJoints(x,y,z)
             maxSpeed = 0.2
             motionProxy.setAngles(names, angles, maxSpeed)
 
             names = ["LShoulderPitch", "LShoulderRoll"]
-            x = data["Left_Hand"]["x"]
-            y = data["Left_Hand"]["y"]
-            z = data["Left_Hand"]["z"]
+            x = data["Left_Elbow"]["x"]
+            y = data["Left_Elbow"]["y"]
+            z = data["Left_Elbow"]["z"]
+            angles = calculateJoints(x,y,z)
+            maxSpeed = 0.2
+            motionProxy.setAngles(names, angles, maxSpeed)
+
+            names = ["RElbowRoll", "RElbowYaw"]
+            x = data["Right_Hand"]["x"]
+            y = data["Right_Hand"]["y"]
+            z = data["Right_Hand"]["z"]
             angles = calculateJoints(x,y,z)
             maxSpeed = 0.2
             motionProxy.setAngles(names, angles, maxSpeed)

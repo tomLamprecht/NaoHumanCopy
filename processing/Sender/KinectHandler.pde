@@ -6,8 +6,7 @@ class KinectHandler{
   Kinect kinect;
   ArrayList<SkeletonData> bodies;
   boolean calibrated, calibrationInProgress;
-  float leftArmMaxDist_x, leftArmMaxDist_y, leftArmMaxDist_z, rightArmMaxDist_x, rightArmMaxDist_y, rightArmMaxDist_z;
-  
+  Map<String, ArrayList<Float>> mapValueMax = new HashMap<String, ArrayList<Float>>();
   class CalibrationThread extends Thread{
     @Override
     public void run(){
@@ -119,22 +118,47 @@ void drawBody(){
    }
    SkeletonData body = bodies.get(bodies.size()-1);
   
+  
+   //Map with all bodyparts with indexes of reference points
+   Map<String, Integer[]> indexMap = createIndexMap();
+   //Map with the maxLength of each Bodypart
+   mapValueMax = new HashMap<String, ArrayList<Float>>();
+   
+   
    //Calibrate X Values
-   if(!calibrationPreparation("Reach out both arms sideways", body)) return;
-   this.leftArmMaxDist_x =abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].x - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].x);
-   this.rightArmMaxDist_x = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].x  - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT].x);
-   println("X Values calibrated");
-   
-   //Calibrate Y Values
+    if(!calibrationPreparation("Reach out both arms sideways", body)) return;
+   for(String element : indexMap.keySet()){
+     float maxDist_x = abs(body.skeletonPositions[indexMap.get(element)[0]].x - body.skeletonPositions[indexMap.get(element)[1]].x);
+     //Generate List of x, y and z coordinates and add the x value
+     ArrayList<Float> temp = new ArrayList<Float>();
+     temp.add(maxDist_x);
+     mapValueMax.put(element,temp);
+   }
+    println("X Values calibrated");
+    
+    //Calibrate Y Values
    if(!calibrationPreparation("Put up both arms", body)) return;
-   this.leftArmMaxDist_y = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].y - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].y);
-   this.rightArmMaxDist_y = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].y  - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT].y);
-   println("Y Values calibrated");
-   
+       for(String element : indexMap.keySet()){
+        float maxDist_y = abs(body.skeletonPositions[indexMap.get(element)[0]].y - body.skeletonPositions[indexMap.get(element)[1]].y);
+        //Get the List that was created in the X Value Calibration
+        ArrayList<Float> temp = mapValueMax.get(element);
+        //Add the y value to the list
+        temp.add(maxDist_y);
+        mapValueMax.put(element,temp);
+       }
+    println("Y Values calibrated");
+       
+       
    //Calibrate Z Values
    if(!calibrationPreparation("Reach both arms infront of you", body)) return;
-   this.leftArmMaxDist_z = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_LEFT].z - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT].z);
-   this.rightArmMaxDist_z = abs(body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_HAND_RIGHT].z  - body.skeletonPositions[Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT].z);
+    for(String element : indexMap.keySet()){
+     float maxDist_z = abs(body.skeletonPositions[indexMap.get(element)[0]].z - body.skeletonPositions[indexMap.get(element)[1]].z);
+     //Get the List that was created in the X Value Calibration
+     ArrayList<Float> temp = mapValueMax.get(element);
+     //Add the z value to the list
+     temp.add(maxDist_z);
+     mapValueMax.put(element,temp);
+    }
    println("Z Values calibrated");
    
    calibrated = true;
@@ -186,9 +210,10 @@ void drawBody(){
             float x = body.skeletonPositions[indexes[0]].x - body.skeletonPositions[indexes[1]].x;
             float y = -(body.skeletonPositions[indexes[0]].y - body.skeletonPositions[indexes[1]].y);
             float z = -(body.skeletonPositions[indexes[0]].z - body.skeletonPositions[indexes[1]].z);
-            x = mapDistToPercentage(x, leftArmMaxDist_x);
-            y  = mapDistToPercentage(y, leftArmMaxDist_y);
-            z = mapDistToPercentage(z, leftArmMaxDist_z);
+            List<Float> maxDistances = mapValueMax.get(keyElement);
+            x = mapDistToPercentage(x, maxDistances.get(0));
+            y  = mapDistToPercentage(y, maxDistances.get(1));
+            z = mapDistToPercentage(z, maxDistances.get(2));
             valueMap.put(keyElement, new Float[]{x,y,z});
       }
       return valueMap;

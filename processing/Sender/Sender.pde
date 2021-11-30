@@ -19,9 +19,8 @@ smooth();
 
 void draw(){
   background(0);
-kinectHandler.drawImages();
-jsonObject = kinectHandler.getJsonOfLatestBody();
-//kinectHandler.testMethod();
+  kinectHandler.drawImages();
+  jsonObject = kinectHandler.getJsonOfLatestBody();
 }
 
 void startKinect(){
