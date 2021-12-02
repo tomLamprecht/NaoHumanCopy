@@ -44,10 +44,10 @@ class KinectHandler{
     //                                              use this point for calibration                  calibrate relative too                calculate actual coordinates
    indexMap.put("Left_Hand", new Integer[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, Kinect.NUI_SKELETON_POSITION_HAND_LEFT});
    indexMap.put("Left_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT});
-   indexMap.put("Left_Elbow_HR", new Intger[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT});
+   indexMap.put("Left_Elbow_HR", new Integer[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT});
    indexMap.put("Right_Hand",new Integer[]{ Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, Kinect.NUI_SKELETON_POSITION_HAND_RIGHT });
    indexMap.put("Right_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT});
-   indexMap.put("Right_Elbow_HR", new Intger[]{Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT});
+   indexMap.put("Right_Elbow_HR", new Integer[]{Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT});
    return indexMap;
   }
   
