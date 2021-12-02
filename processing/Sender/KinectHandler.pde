@@ -41,11 +41,13 @@ class KinectHandler{
   */
   public Map<String, Integer[]> createIndexMap(){
     Map<String, Integer[]> indexMap = new HashMap<String, Integer[]>();
-   indexMap.put("Left_Hand", new Integer[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT});
-   indexMap.put("Left_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT});
-   indexMap.put("Right_Hand",new Integer[]{ Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT});
-   indexMap.put("Right_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT});
-  
+    //                                              use this point for calibration                  calibrate relative too                calculate actual coordinates
+   indexMap.put("Left_Hand", new Integer[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, Kinect.NUI_SKELETON_POSITION_HAND_LEFT});
+   indexMap.put("Left_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT});
+   indexMap.put("Left_Elbow_HR", new Intger[]{Kinect.NUI_SKELETON_POSITION_HAND_LEFT, Kinect.NUI_SKELETON_POSITION_SHOULDER_LEFT, Kinect.NUI_SKELETON_POSITION_ELBOW_LEFT});
+   indexMap.put("Right_Hand",new Integer[]{ Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, Kinect.NUI_SKELETON_POSITION_HAND_RIGHT });
+   indexMap.put("Right_Elbow", new Integer[]{Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT});
+   indexMap.put("Right_Elbow_HR", new Intger[]{Kinect.NUI_SKELETON_POSITION_HAND_RIGHT, Kinect.NUI_SKELETON_POSITION_SHOULDER_RIGHT, Kinect.NUI_SKELETON_POSITION_ELBOW_RIGHT});
    return indexMap;
   }
   
@@ -207,9 +209,9 @@ void drawBody(){
       Map<String, Integer[]> indexMap = createIndexMap();
       for(String keyElement : indexMap.keySet()){
             Integer[] indexes = indexMap.get(keyElement);
-            float x = body.skeletonPositions[indexes[0]].x - body.skeletonPositions[indexes[1]].x;
-            float y = -(body.skeletonPositions[indexes[0]].y - body.skeletonPositions[indexes[1]].y);
-            float z = -(body.skeletonPositions[indexes[0]].z - body.skeletonPositions[indexes[1]].z);
+            float x = body.skeletonPositions[indexes[2]].x - body.skeletonPositions[indexes[1]].x;
+            float y = -(body.skeletonPositions[indexes[2]].y - body.skeletonPositions[indexes[1]].y);
+            float z = -(body.skeletonPositions[indexes[2]].z - body.skeletonPositions[indexes[1]].z);
             List<Float> maxDistances = mapValueMax.get(keyElement);
             x = mapDistToPercentage(x, maxDistances.get(0));
             y  = mapDistToPercentage(y, maxDistances.get(1));
