@@ -27,23 +27,5 @@ The responding JSON has all Coordinates of the 3D Modell.
 
 # TO DO
 
-- **Decide on if the Coordinates get parsed in Java or Python**
-
-- **Parse the Coordinates**
-
-- **Write a Function in Java to get the Coordinates in a List**
-
-- **Parse the Coordinates in JSON (Java)**
-
-- **Write a Function in Python for controlling the Robot Arms with parsed Coordinates**
-
-- **Update the Client Server to accept JSON instead of Strings only**
-
-- **Maybe find a solution to find a better performing way to send the length of the upcomming message**\
-    Right now this happens with a Storage Usage of 100 Bytes. :/
-
-- **Write a Main Function for the Python Script**
-
-- **Update AmountOfBytesRead function**
-
-processing-java --platform=windows --sketch="C:\Users\Test\Desktop\testProce" --output="C:\Users\Test\Desktop\testProce\output"  --export test
+- **Angel Calculation of Elbow: **
+-> Ebene Aufspannen mit 0 Punkt, Elbow Coordinate und Elbow Coordinate mit negativen x-Value. Winkel von Vector(Elbow to Hand) zur Ebene Berechnen. Das sollte der gesuchte Winkel sein.
