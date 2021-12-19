@@ -18,28 +18,8 @@ enable  = True
 isSuccess = motionProxy.setCollisionProtectionEnabled(chainName, enable)
 print ("Anticollision activation on Arms: " + str(isSuccess))
 
-
-def calculateJoints():
-    #Calculating Shoulder Roll
-    x = 0
-    y = -0.8
-    y = -y
-    z = -1
-    if(z >= 0):
-        angleShoulderPitch = y*90
-        angleShoulderRoll =-x*90
-    else:
-        angleShoulderPitch = y*90 + 2*(-90 - y*90)
-        angleShoulderRoll =-x*90
-        if(-y < 0):
-            angleShoulderPitch = y*90 + 2*(90 - y*90)
-            pass
-
-    print(angleShoulderPitch)
-    return [radians(angleShoulderPitch), radians(angleShoulderRoll)]
-
 print(motionProxy.getBodyNames("Body"))
-names = ["RShoulderPitch", "RShoulderRoll"]
-angles = calculateJoints()
+names = ["RElbowRoll"]
+angles = (radians(-90))
 maxSpeed = 0.2
 motionProxy.setAngles(names, angles, maxSpeed)

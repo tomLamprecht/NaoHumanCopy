@@ -63,6 +63,7 @@ class NaoHandler:
 
             angles = self.calculateJointsHand(xE,yE,zE, xH, yH, zH)
             maxSpeed = 0.2
+            angles[0] = -angles[0]
             angles = self.repairAngles(angles)
             self.motionProxy.setAngles(names,angles, maxSpeed)
 
@@ -78,7 +79,6 @@ class NaoHandler:
             angles = self.calculateJointsElbowYaw(xE,yE,zE, xH, yH, zH)
             angles = self.repairAngles(angles)
             maxSpeed = 0.2
-            print(angles)
             self.motionProxy.setAngles(names,angles, maxSpeed)
 
             names = ["RElbowYaw"]
@@ -92,7 +92,7 @@ class NaoHandler:
             angles = self.calculateJointsElbowYaw(xE,yE,zE, xH, yH, zH)
             maxSpeed = 0.2
             angles = self.repairAngles(angles)
-           # self.motionProxy.setAngles(names,angles, maxSpeed)
+            self.motionProxy.setAngles(names,angles, maxSpeed)
 
     def repairAngles(self, angles):
         if (math.isnan(angles[0])):

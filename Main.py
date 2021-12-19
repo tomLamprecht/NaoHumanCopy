@@ -40,6 +40,7 @@ def main():
   #  print(Reciever.getDataFromServer(socket))
     while(True):
         data = Reciever.getDataFromServer(socket)
+        #data = json.loads(open('kinectjson.json').read ())
         nao.moveJoints(data)
 
 
