@@ -95,24 +95,24 @@ Following Python versions with matching Libraries have to be installed.
 # Client Server Connection Protocol
 <u> This section is only helpful for development and not required for running the program</u>
 
-The Client is Written in Python and the Server in Java.
-The Protocol for the communication is the following:
+The client is written in Python and the server in Java.
+The protocol for the communication is the following:
 
 - **Request**\
-        The Client sends a request to the Server
+        The client sends a request to the server
 
 - **Answer**\
-        The Server sends the length of the upcomming JSON. (It is assumed that the size of JSON can be saved in a integer (32 Bit))
+        The server sends the length of the upcomming JSON. (It is assumed that the size of JSON can be saved in a integer (32 Bit))
 
 - **Confirmation**\
-        The Client has to read the first Message and send an confirmation back to the Server that he is ready for the JSON
+        The client has to read the first Message and send an confirmation back to the server that he is ready for the JSON
 
 - **Final Answer**\
-        The Server sends the JSON and is ready for the next Connection 
+        The server sends the JSON and is ready for the next connection 
 
 <br>
 This can be repeated as often as necessary.<br/>
-The responding JSON has all Coordinates of the 3D Modell.
+The responding JSON has all coordinates of the 3D modell.
 
 ---
 
