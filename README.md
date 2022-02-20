@@ -21,6 +21,8 @@ This is a basic program that copies the movement of a human with nao, with the h
 
 - [Installation Guide](#install-guide)
 
+- [Client Server Connection Protocol](#connection-protocol)
+
 - [License & Copyright](#license)
 
 <br>
@@ -89,7 +91,7 @@ Following Python versions with matching Libraries have to be installed.
 
 
 ---
-
+<a name="connection-protocol"></a>
 # Client Server Connection Protocol
 <u> This section is only helpful for development and not required for running the program</u>
 
