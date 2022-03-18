@@ -24,75 +24,13 @@ class NaoHandler:
 
     def moveJoints(self, data):
          if (data != json.loads("{}")):
-            names = ["RShoulderPitch", "RShoulderRoll"]
-            x = data["Right_Elbow"]["x"]
-            y = data["Right_Elbow"]["y"]
-            z = data["Right_Elbow"]["z"]
+            names = ["ShoulderPitch", "ShoulderRoll"]
+            x = data["Elbow"]["x"]
+            y = data["Elbow"]["y"]
+            z = data["Elbow"]["z"]
             angles = self.calculateJoints(x,y,z)
             maxSpeed = 0.2
             self.motionProxy.setAngles(names, angles, maxSpeed)
-
-            names = ["LShoulderPitch", "LShoulderRoll"]
-            x = data["Left_Elbow"]["x"]
-            y = data["Left_Elbow"]["y"]
-            z = data["Left_Elbow"]["z"]
-            angles = self.calculateJoints(x,y,z)
-            maxSpeed = 0.2
-            self.motionProxy.setAngles(names, angles, maxSpeed)
-
-            names = ["LElbowRoll"]
-            xE = data["Left_Elbow_HR"]["x"]
-            yE = data["Left_Elbow_HR"]["y"]
-            zE = data["Left_Elbow_HR"]["z"]
-            xH = data["Left_Hand"]["x"]
-            yH = data["Left_Hand"]["y"]
-            zH = data["Left_Hand"]["z"]
-
-            angles = self.calculateJointsHand(xE,yE,zE, xH, yH, zH)
-            maxSpeed = 0.2
-            angles = self.repairAngles(angles)
-            self.motionProxy.setAngles(names,angles, maxSpeed)
-
-            names = ["RElbowRoll"]
-            xE = data["Right_Elbow_HR"]["x"]
-            yE = data["Right_Elbow_HR"]["y"]
-            zE = data["Right_Elbow_HR"]["z"]
-            xH = data["Right_Hand"]["x"]
-            yH = data["Right_Hand"]["y"]
-            zH = data["Right_Hand"]["z"]
-
-            angles = self.calculateJointsHand(xE,yE,zE, xH, yH, zH)
-            maxSpeed = 0.2
-            angles[0] = -angles[0]
-            angles = self.repairAngles(angles)
-            self.motionProxy.setAngles(names,angles, maxSpeed)
-
-
-            names = ["LElbowYaw"]
-            xE = data["Left_Elbow_HR"]["x"]
-            yE = data["Left_Elbow_HR"]["y"]
-            zE = data["Left_Elbow_HR"]["z"]
-            xH = data["Left_Hand"]["x"]
-            yH = data["Left_Hand"]["y"]
-            zH = data["Left_Hand"]["z"]
-
-            angles = self.calculateJointsElbowYaw(xE,yE,zE, xH, yH, zH)
-            angles = self.repairAngles(angles)
-            maxSpeed = 0.2
-            self.motionProxy.setAngles(names,angles, maxSpeed)
-
-            names = ["RElbowYaw"]
-            xE = data["Right_Elbow_HR"]["x"]
-            yE = data["Right_Elbow_HR"]["y"]
-            zE = data["Right_Elbow_HR"]["z"]
-            xH = data["Right_Hand"]["x"]
-            yH = data["Right_Hand"]["y"]
-            zH = data["Right_Hand"]["z"]
-
-            angles = self.calculateJointsElbowYaw(xE,yE,zE, xH, yH, zH)
-            maxSpeed = 0.2
-            angles = self.repairAngles(angles)
-            self.motionProxy.setAngles(names,angles, maxSpeed)
 
     def repairAngles(self, angles):
         if (math.isnan(angles[0])):
