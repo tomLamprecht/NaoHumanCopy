@@ -57,7 +57,7 @@ The Program schedule can be split up in 3 different sections:
         The program boots up. The Server tries to connect with the Kinect camera and the Python client builds up a connection with the Server.
 
  - **Configuration:**
-        The program has sucesfully booted up and is ready to be configurated.<br/> For configuration stand in front of the camera and wait for the program to detect your sceleton. Then press the ```space``` button and followe the steps on the screen.
+        The program has sucesfully booted up and is ready to be configurated.<br/> For configuration stand in front of the camera and wait for the program to detect your sceleton. Then press the ```space``` button and follow the steps on the screen.
        
     * &ensp; Arms straight up
     * &ensp; Arms to the left
